@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Код доступа к себе — коуч-лингвист</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink-blue: #1e2b3c;
+            --bark-brown: #5a4a3a;
+            --linen-beige: #f7f4ef;
+            --soft-cloud: #e9e8e4;
+            --muted-gold: #9b8a6b;
+            --olive-accent: #7d8a6a;
+            --text-primary: #2b2a27;
+            --text-secondary: #4a4540;
+            --text-light: #6b6560;
+            --white: #fefdfb;
+            --button-hover: #2c3f52;
+            --divider: #d9d4cc;
+            --section-gap: clamp(4rem, 10vw, 8rem);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 18px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--linen-beige);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+
+        /* ----- Fade-in animation ----- */
+        .fade-section {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity 0.9s cubic-bezier(0.22, 0.61, 0.36, 1), transform 0.9s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+
+        .fade-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ----- Typography ----- */
+        h1,
+        h2,
+        h3,
+        h4 {
+            color: var(--ink-blue);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        h1 {
+            font-size: clamp(2.2rem, 5.5vw, 3.6rem);
+            line-height: 1.15;
+            font-weight: 700;
+        }
+
+        h2 {
+            font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+            line-height: 1.3;
+            margin-bottom: 1.4rem;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            line-height: 1.4;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            color: var(--bark-brown);
+            letter-spacing: 0.01em;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2.2vw, 1.3rem);
+            color: var(--bark-brown);
+            font-weight: 500;
+            margin-bottom: 1.8rem;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            line-height: 1.5;
+        }
+
+        p {
+            margin-bottom: 1.2rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .text-large {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-primary);
+        }
+
+        .text-muted {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .accent-gold {
+            color: var(--muted-gold);
+            font-weight: 500;
+        }
+
+        /* ----- Layout ----- */
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 clamp(1.5rem, 5vw, 3rem);
+        }
+
+        section {
+            padding: var(--section-gap) 0;
+        }
+
+        .section-divider {
+            border: none;
+            height: 1px;
+            background: var(--divider);
+            margin: 0;
+            opacity: 0.6;
+        }
+
+        /* ----- Hero Section ----- */
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            padding: 3rem 0 5rem;
+            position: relative;
+        }
+
+        .hero .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-width: 900px;
+        }
+
+        .hero h1 {
+            margin-bottom: 0.6rem;
+        }
+
+        .hero .hero-subtitle {
+            margin-bottom: 1rem;
+        }
+
+        .hero-intro {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.6rem;
+            line-height: 1.8;
+            max-width: 720px;
+            font-weight: 400;
+        }
+
+        .hero-manifesto {
+            font-size: 1.05rem;
+            color: var(--text-primary);
+            margin-bottom: 2.2rem;
+            line-height: 1.8;
+            max-width: 720px;
+            font-weight: 400;
+            border-left: 2px solid var(--muted-gold);
+            padding-left: 1.4rem;
+            font-style: italic;
+            color: #3a3530;
+        }
+
+        /* ----- Buttons ----- */
+        .btn {
+            display: inline-block;
+            padding: 0.9rem 2rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            background-color: var(--ink-blue);
+            color: var(--white);
+            text-align: center;
+            line-height: 1.4;
+            white-space: nowrap;
+        }
+
+        .btn:hover,
+        .btn:focus-visible {
+            background-color: var(--button-hover);
+            outline: none;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--ink-blue);
+            border: 1.5px solid var(--ink-blue);
+            padding: 0.85rem 1.9rem;
+        }
+
+        .btn-secondary:hover,
+        .btn-secondary:focus-visible {
+            background-color: var(--ink-blue);
+            color: var(--white);
+            outline: none;
+        }
+
+        .btn-wrapper {
+            margin-top: 0.5rem;
+        }
+
+        /* ----- Block 2: About the anchor point ----- */
+        .block-anchor h2 {
+            color: var(--ink-blue);
+        }
+        .block-anchor p {
+            max-width: 680px;
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        /* ----- Block 3: Team and hidden losses ----- */
+        .block-team h2 {
+            color: var(--ink-blue);
+        }
+        .block-team p {
+            max-width: 680px;
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        /* ----- Block 4: About me ----- */
+        .block-about .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 1.5rem;
+        }
+
+        .block-about .about-col {
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+        }
+
+        .block-about h2 {
+            margin-bottom: 0.5rem;
+        }
+
+        .block-about .intro-text {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            max-width: 700px;
+        }
+
+        .block-about ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 1rem;
+        }
+
+        .block-about ul li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.6rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 0.98rem;
+        }
+
+        .block-about ul li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.55em;
+            width: 6px;
+            height: 6px;
+            background-color: var(--muted-gold);
+            border-radius: 0;
+            transform: rotate(45deg);
+        }
+
+        .block-about .digital-trail p {
+            margin-bottom: 0.5rem;
+            font-size: 0.98rem;
+        }
+
+        .block-about .digital-trail .trail-item {
+            margin-bottom: 0.9rem;
+            padding-left: 0;
+        }
+
+        .block-about .digital-trail .trail-item strong {
+            color: var(--bark-brown);
+            font-weight: 600;
+            display: block;
+            margin-bottom: 0.15rem;
+        }
+
+        .block-about .digital-trail .trail-item span {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .block-about a {
+            color: var(--muted-gold);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            text-decoration-thickness: 1px;
+            transition: color 0.2s;
+            font-weight: 500;
+        }
+        .block-about a:hover {
+            color: var(--bark-brown);
+            text-decoration-color: var(--bark-brown);
+        }
+
+        .about-method {
+            background-color: #f3efe8;
+            padding: 1.5rem 1.5rem;
+            border-left: 3px solid var(--muted-gold);
+            font-size: 0.98rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        .about-method strong {
+            color: var(--bark-brown);
+            font-weight: 600;
+        }
+
+        .spaces-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            margin-top: 0.3rem;
+        }
+
+        .space-card {
+            background: var(--white);
+            padding: 0.9rem 1.2rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            border: 1px solid var(--divider);
+            flex: 1 1 180px;
+            text-align: center;
+            letter-spacing: 0.01em;
+        }
+
+        .space-card strong {
+            color: var(--ink-blue);
+            font-weight: 600;
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        /* ----- Block 5: Invitation ----- */
+        .block-invitation {
+            background-color: #f3efe8;
+            padding: var(--section-gap) 0;
+        }
+
+        .block-invitation h2 {
+            color: var(--ink-blue);
+        }
+
+        .block-invitation .invitation-text {
+            max-width: 680px;
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        .price-tag {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--bark-brown);
+            margin: 1.2rem 0;
+            letter-spacing: 0.02em;
+        }
+
+        .quiet-note {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            font-style: italic;
+            margin-bottom: 1.8rem;
+            line-height: 1.6;
+        }
+
+        /* ----- Footer ----- */
+        .site-footer {
+            padding: 3rem 0 3.5rem;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        .site-footer h4 {
+            font-size: 0.95rem;
+            margin-bottom: 0.8rem;
+            color: var(--ink-blue);
+            font-weight: 600;
+        }
+
+        .site-footer .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin: 0.8rem 0 1rem;
+        }
+
+        .site-footer a {
+            color: var(--muted-gold);
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .site-footer a:hover {
+            color: var(--bark-brown);
+        }
+
+        /* ----- Responsive ----- */
+        @media (max-width: 768px) {
+            .block-about .about-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .hero {
+                min-height: auto;
+                padding: 3rem 0 4rem;
+            }
+
+            .hero-manifesto {
+                border-left-width: 1.5px;
+                padding-left: 1rem;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+                white-space: normal;
+            }
+
+            .btn-wrapper {
+                width: 100%;
+            }
+
+            .spaces-list {
+                flex-direction: column;
+            }
+
+            .space-card {
+                flex: 1 1 auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            html {
+                font-size: 16px;
+            }
+
+            section {
+                padding: 3rem 0;
+            }
+
+            .hero {
+                padding: 2.5rem 0 3rem;
+            }
+
+            .btn {
+                padding: 0.8rem 1.4rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- БЛОК 1: ВЕРХНИЙ ЭКРАН (Hero Section) -->
+    <section class="hero fade-section">
+        <div class="container">
+            <h1>Код доступа к себе. <br>Среда для тех, кто продолжает идти.</h1>
+            <p class="hero-subtitle">Я — [Ваше Имя], коуч, лингвист, предприниматель.</p>
+            <p class="hero-intro">
+                Я — тот самый человек, который не даст вам сойти с намеченного маршрута и подменить глубокий интерес
+                к жизни тревогой и страхом. Да, неопределенность пугает, холодит и отвергает. Только это совсем не повод
+                переждать или отдать свою жизнь воле случая. Прекратите страдать, найдите возможность, используйте ее.
+            </p>
+            <p class="hero-manifesto">
+                Если вы руководитель или владелец малого бизнеса и чувствуете, что земля уходит из-под ног, —
+                я помогу вам высвободить скрытые резервы, спрятанные в привычных способах общения и взаимодействия.
+                Без паники, без надрыва, с уважением к вашей сложности.
+            </p>
+            <div class="btn-wrapper">
+                <a href="#invitation" class="btn">Назначить время первой встречи</a>
+            </div>
+        </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- БЛОК 2: О ТОЧКЕ ОПОРЫ -->
+    <section class="block-anchor fade-section">
+        <div class="container">
+            <h2>Когда кажется, что всё держится только на вас</h2>
+            <p>
+                Вы отвечаете за людей, за дело, за семью. Вы устали быть сильным в одиночку, но не можете позволить себе
+                остановиться. Я не предлагаю мотивацию и не учу «позитивному мышлению». Я помогаю вам вернуть внутреннюю
+                устойчивость — то состояние, из которого принимаются точные решения. Без суеты, без «взрывов».
+            </p>
+        </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- БЛОК 3: О КОМАНДЕ И СКРЫТЫХ ПОТЕРЯХ -->
+    <section class="block-team fade-section">
+        <div class="container">
+            <h2>Когда команда кивает, но ничего не меняется</h2>
+            <p>
+                Скрытое сопротивление, имитация бурной деятельности, привычка пережидать — всё это течи, через которые
+                утекает энергия бизнеса. Я исследую то, как выстроена внутренняя коммуникация в вашей команде, и нахожу
+                точки, где привычные способы взаимодействия создают напряжение и потери. Моя задача — помочь вам превратить
+                общение в команде из источника проблем в опору. Спокойно и без взрывных «тренингов».
+            </p>
+        </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- БЛОК 4: ОБО МНЕ -->
+    <section class="block-about fade-section">
+        <div class="container">
+            <h2>Я — [Ваше Имя], коуч, лингвист, исследователь речи и мышления.</h2>
+            <p class="intro-text">
+                Я работаю официально (ИП/самозанятость), чтобы вы могли быть уверены в прозрачности нашего сотрудничества.
+            </p>
+
+            <div class="about-grid">
+                <!-- Левая колонка: Профессиональный путь + Метод -->
+                <div class="about-col">
+                    <div>
+                        <h3>Профессиональный путь</h3>
+                        <ul>
+                            <li>Коуч Ассоциации русскоязычных коучей (АРК).</li>
+                            <li>Автор и ведущая Мастерской «Больше, чем текст» в медиатеке АРК.</li>
+                            <li>Психолог, преподаватель вуза, ведущий специалист Института образования.</li>
+                            <li>Многолетний опыт в лингвистике и межкультурной коммуникации.</li>
+                        </ul>
+                    </div>
+                    <div class="about-method">
+                        <strong>Мой метод:</strong><br>
+                        Я работаю с языком и речью как с ключом к мышлению. Я исследую культурные сценарии, которые
+                        управляют поведением незаметно для нас самих, и помогаю обнаружить те скрытые возможности,
+                        о которых вы забыли. Это не психотерапия и не курс мотивации. Это работа, уважающая вашу занятость
+                        и вашу сложность.
+                    </div>
+                </div>
+
+                <!-- Правая колонка: Цифровой след + Пространства -->
+                <div class="about-col">
+                    <div class="digital-trail">
+                        <h3>Как я думаю и что исследую (мой цифровой след)</h3>
+                        <p class="text-muted" style="margin-bottom:1rem;">
+                            Здесь нет шаблонных «кейсов». Есть только реальные темы, которые я разбираю публично, чтобы вы
+                            могли понять ход моей мысли.
+                        </p>
+                        <div class="trail-item">
+                            <strong>О власти языка и страхе сказать «нет»:</strong>
+                            <span>Разбор рассказа Чехова «Смерть чиновника» — как привычные речевые конструкции парализуют инициативу в командах.</span>
+                        </div>
+                        <div class="trail-item">
+                            <strong>О культурном сценарии «пассивного ожидания»:</strong>
+                            <span>Как надежда на «авось» и привычка пережидать проникает в язык совещаний и убивает ответственность.</span>
+                        </div>
+                        <div class="trail-item">
+                            <strong>О ловушке «я сама» для женщин-лидеров:</strong>
+                            <span>Почему этот сценарий ведет к выгоранию и как он отражается в речи.</span>
+                        </div>
+                        <div class="trail-item">
+                            <strong>О «Собачьем сердце» Булгакова как зеркале для команды:</strong>
+                            <span>Где в вашей команде свой «Шариков», имитирующий лояльность?</span>
+                        </div>
+                        <p style="margin-top:1rem;">
+                            <a href="#" target="_blank" rel="noopener">Ссылка на Telegram-канал или блог</a> — здесь я
+                            продолжаю эти размышления. Заходите, если вам откликается такой способ смотреть на привычные вещи.
+                        </p>
+                    </div>
+
+                    <div>
+                        <h3>Пространства, которые я создаю</h3>
+                        <div class="spaces-list">
+                            <div class="space-card">
+                                <strong>«Код доступа к себе»</strong>
+                                Сообщество ВК — онлайн-кабинет для руководителей.
+                            </div>
+                            <div class="space-card">
+                                <strong>«Парабола»</strong>
+                                Сообщество ВК — пространство для родителей и детей.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- БЛОК 5: ПРИГЛАШЕНИЕ И ЧЕК-ЛИСТ -->
+    <section class="block-invitation fade-section" id="invitation">
+        <div class="container">
+            <h2>Как проходит первая встреча</h2>
+            <div class="invitation-text">
+                <p>
+                    Разговор один на один. Полтора часа. Без шаблонов, без оценок. Вы приносите свою ситуацию, я — своё
+                    умение видеть скрытое в языке и взаимодействии. Вместе мы находим ту самую точку опоры, из которой
+                    можно действовать дальше — спокойно, уверенно и с максимальной пользой для себя, своей семьи и своей
+                    команды.
+                </p>
+                <p class="price-tag">Стоимость — 5000 рублей.</p>
+                <p class="quiet-note">
+                    Чтобы подготовиться к встрече, вам не нужно писать список вопросов или формулировать запрос.
+                    Единственное, о чём я прошу: найдите для себя полтора часа тишины и возможность быть наедине с собой.
+                    Всё остальное произойдёт во время нашего разговора.
+                </p>
+            </div>
+            <div class="btn-wrapper">
+                <a href="#invitation" class="btn">Назначить время встречи</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- БЛОК 6: ЮРИДИЧЕСКАЯ ИНФОРМАЦИЯ (подвал) -->
+    <footer class="site-footer fade-section">
+        <div class="container">
+            <h4>Юридическая информация</h4>
+            <p>
+                ИП [Ваше Имя], ИНН [номер]<br>
+                Политика обработки персональных данных<br>
+                Договор-оферта
+            </p>
+            <p class="text-muted" style="margin-top:0.8rem;">
+                Все документы доступны по запросу. Работаю официально.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        (function() {
+            const sections = document.querySelectorAll('.fade-section');
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -40px 0px',
+                threshold: 0.08
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // Fallback: if IntersectionObserver not supported or sections are already in view
+            window.addEventListener('load', () => {
+                sections.forEach(section => {
+                    const rect = section.getBoundingClientRect();
+                    if (rect.top < window.innerHeight && rect.bottom > 0) {
+                        section.classList.add('visible');
+                    }
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
